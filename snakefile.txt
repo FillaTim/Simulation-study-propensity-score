@@ -1,0 +1,31 @@
+sample_size = [500,5000]
+prop_mod = ["linear","non_linear"]
+bias = [0.5]
+bias_treatment = [0,0.37]
+k = [1,501,1001,1501,2001,2501,3001,3501,4001,4501,5001,5501,6001,6501,7001,7501,8001,8501,9001,9501]
+cenario = [1,2,3,4]
+# outname contains the name where you want to store the results
+outname = "/store_results"
+
+rule all:
+	input:
+		expand("{outname}/first_result_binary_sample_size_{sample_size}_bias_{bias}_bias_treatment_{bias_treatment}_prop_mod_{prop_mod}_cenario_{cenario}_k_{k}.RData", sample_size=sample_size, prop_mod=prop_mod, bias=bias,cenario=cenario,bias_treatment=bias_treatment,outname=outname,k=k)
+
+
+rule run_script:
+	input:
+		"/Path/where/the/RScript/is/to/be/found.R"
+	output:
+		"{outname}/first_result_binary_sample_size_{sample_size}_bias_{bias}_bias_treatment_{bias_treatment}_prop_mod_{prop_mod}_cenario_{cenario}_k_{k}.RData"
+	resources:
+		runtime_hrs=71,
+		mem_total_mb=2000
+	shell:
+		"""
+		set -e
+		module load R/3.6.1
+		cd "/Path/to/folder/where/the/RScript/is"
+		Rscript --vanilla snakemake_binary.R {wildcards.sample_size} {wildcards.bias} {wildcards.bias_treatment} {wildcards.prop_mod} {wildcards.cenario} {wildcards.k} {wildcards.outname}
+		"""
+
+
