@@ -36,7 +36,7 @@ library(optimr)
 setwd("/gpfs/project/tifil100/snakemake_binary/RCode")
 source("variance_estimator_function.R")
 #load the matrix containing the coefficients for the propensity score model
-load("Erg_final_matrix.RData")
+load("ps_coefficient_matrix.RData")
 modelling_approach_functions<-function(dataset,treatment,survey_weights=NULL,grad=1,linkf="logit"){
   p_glob<-length(which(dataset[,treatment]==1))/length(dataset[,treatment])
   #grad states whether higher moment of continuous covariates should
